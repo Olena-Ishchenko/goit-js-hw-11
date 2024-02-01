@@ -5,6 +5,8 @@ import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const form = document.querySelector('.form');
 const gallery = document.querySelector('.gallery');
+const loader = document.querySelector('.loader');
+loader.style.display = 'none';
 const searchParams = {
   key: '42093583-bfe36716eb3593f6644c471e3',
   q: '',
@@ -15,12 +17,14 @@ const searchParams = {
 
 form.addEventListener('submit', e => {
   e.preventDefault();
-  const inputText = form.elements.search.value;
+  loader.style.display = 'inline-block';
+  gallery.innerHTML = '';
+  const inputText = form.elements.search.value.trim();
   searchParams.q = inputText;
   fetchImage()
     .then(images => renderGallery(images))
     .catch(error => console.log(error));
-  const lightBox = new SimpleLightbox('.gallery-link');
+
   form.reset();
 });
 
@@ -78,5 +82,8 @@ function renderGallery(images) {
       .join('');
 
     gallery.innerHTML = item;
+    const lightBox = new SimpleLightbox('.gallery-link');
+    lightBox.refresh();
   }
+  loader.style.display = 'none';
 }
